@@ -75,17 +75,26 @@ def decrypt():
     return(decoded)
 
 #Check for user input and run appropriate function
-if sys.argv[1] == "encrypt":
-    if len(sys.argv) == 4:
-        encrypt()
+if len(sys.argv) != 1:
+    if sys.argv[1] == "--encrypt" or sys.argv[1] == "-e":
+        if len(sys.argv) == 4:
+            encrypt()
+        elif len(sys.argv) == 3:
+            print("Missing output file")
+        else:
+            print("Missing file to encrypt")
+            exit(1)
+    elif sys.argv[1] == "--decrypt" or sys.argv[1] == "-d":
+        if len(sys.argv) == 3:
+            decrypt()
+        else:
+            print("Missing file to decrypt")
+            exit(1)
+    elif ((sys.argv[1] == "-h") or (sys.argv[1] == "--help")):
+        print("Usage: vault {--encypt | -e} INFILE OUTFILE\n       vault {--decrypt | -d} INFILE")
     else:
-        print("Missing file to encrypt")
-        exit(1)
-elif sys.argv[1] == "decrypt":
-    if len(sys.argv) == 3:
-        decrypt()
-    else:
-        print("Missing file to decrypt")
-        exit(1)
+        print("vault requires an argument!")
+        print("Try 'vault -h for more information.")
 else:
-    print("Usage: vault [encypt | decrypt] INFILE OUTFILE")
+        print("vault requires an argument!")
+        print("Try 'vault -h for more information.")
