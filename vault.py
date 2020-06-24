@@ -11,28 +11,29 @@ def ask_key():
 
     for i in key:  # Iterate over each character and convert to ascii decimal value
         seed += str(ord(i))  # Concatenate up each ascii value into a single string
-    print("Using key", seed,"\n")
+    print("Using key", seed, "\n")
     random.seed(a=seed)  # Use the concatenated string as a seed for random
     cipher = random.randint(1, 255)  # Create a random integer 1-255
 
     return(cipher)
- 
+
+
 # Function for encrypting data
 def encrypt():
     cipher = ask_key()  # Run function to get user input for key
     my_file = open(sys.argv[2], "r")  # Open up the file with a secret message
-    
+
     my_data = ""
     for i in my_file.read():  # Iterate over each character
         my_data += str(ord(i))  # Concatenate the ascii decimal value of each character
         my_data += " "  # Add spaces in between
-    
+
     n = 0
     encoded = ""
     encode_step_1 = ""
     encode_step_2 = cipher
     length = len(my_data.split())
-    
+
     for i in range(0, length):
         encode_step_1 = ""
         encode_step_1 += str(my_data.split(" ")[n])  # Iterate over each ascii value set
@@ -40,7 +41,7 @@ def encrypt():
         encode_step_2 += int(encode_step_1)  # Add up the cipher and the ascii value to make a new (sometimes not ascii) value
         encoded += str(encode_step_2)  # Concatenate up into a single string of numbers
         encoded += " "
-        n+=1
+        n += 1
 
     output_file = open(sys.argv[3], "w")  # Open a new file to be saved
     output_file.write(encoded)  # Write the encoded string to the new file
@@ -50,6 +51,7 @@ def encrypt():
 
     return(encoded)
 
+
 # Function for decrypting data
 def decrypt():
     cipher = int(ask_key())
@@ -57,14 +59,14 @@ def decrypt():
     n = 0
     decode_step_1 = 0
     decoded = ""
-    
+
     my_file = open(sys.argv[2], "r")
 
     for i in my_file.read():
-        my_data += i 
+        my_data += i
 
     length = len(my_data.split())
-    for i in range(0,length):
+    for i in range(0, length):
         decode_step_1 = 0
         decode_step_1 = abs(int(my_data.split(" ")[n]) - cipher)
         for x in str(decode_step_1).split(" "):
@@ -73,6 +75,7 @@ def decrypt():
 
     print(decoded)
     return(decoded)
+
 
 # Check for user input and run appropriate function
 if len(sys.argv) != 1:
@@ -96,5 +99,5 @@ if len(sys.argv) != 1:
         print("vault requires an argument!")
         print("Try 'vault -h for more information.")
 else:
-        print("vault requires an argument!")
-        print("Try 'vault -h for more information.")
+    print("vault requires an argument!")
+    print("Try 'vault -h for more information.")
