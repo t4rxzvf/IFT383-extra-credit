@@ -37,3 +37,6 @@ jobs:
     - name: Test with pytest
       run: |
         ./vault.py -h
+        echo "TEST" | ./vault.py --key-from-stdin --encrypt README.md deleteme.file
+        echo "TEST" | ./vault.py --key-from-stdin --decrypt deleteme.file
+
