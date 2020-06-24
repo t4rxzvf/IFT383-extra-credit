@@ -36,9 +36,9 @@ def stdin_key():
 
 
 # Function for encrypting data
-def encrypt(key):
+def encrypt(key, infile, outfile):
     cipher = int(key)  # Run function to get user input for key
-    my_file = open(sys.argv[2], "r")  # Open up the file with a secret message
+    my_file = open(sys.argv[infile], "r")  # Open up the file with a secret message
 
     my_data = ""
     for i in my_file.read():  # Iterate over each character
@@ -60,7 +60,7 @@ def encrypt(key):
         encoded += " "
         n += 1
 
-    output_file = open(sys.argv[3], "w")  # Open a new file to be saved
+    output_file = open(sys.argv[outfile], "w")  # Open a new file to be saved
     output_file.write(encoded)  # Write the encoded string to the new file
     output_file.close()  # Close the file
 
@@ -70,14 +70,14 @@ def encrypt(key):
 
 
 # Function for decrypting data
-def decrypt(key):
+def decrypt(key, infile):
     cipher = int(key)
     my_data = ""
     n = 0
     decode_step_1 = 0
     decoded = ""
 
-    my_file = open(sys.argv[2], "r")
+    my_file = open(sys.argv[infile], "r")
 
     for i in my_file.read():
         my_data += i
@@ -95,24 +95,40 @@ def decrypt(key):
 
 
 # Check for user input and run appropriate function
+# This quickly turned into a nighmare of if-statements
+feature = ""
 if len(sys.argv) != 1:
-    if sys.argv[1] == "--encrypt" or sys.argv[1] == "-e":
+    for i in sys.argv:
+        if i == "--encrypt" or i == "-e":
+            feature = "encrypt"
+            try:  # Needed to add try so that the below code doesn't error in case of decrypt
+                infile = (sys.argv.index("--encrypt")+1)
+                outfile = (sys.argv.index("--encrypt")+2)
+            except:  # Don't do anything if try fails
+                pass
+        if i == "--decrypt" or i == "-d":
+            feature = "decrypt"
+            try:
+                infile = (sys.argv.index("--decrypt")+1)
+            except:
+                pass
+    if feature == "encrypt":
         if len(sys.argv) >= 4:
             if "--key-from-stdin" in sys.argv:
-                encrypt(stdin_key())
+                encrypt(stdin_key(), infile, outfile)
             else:
-                encrypt(ask_key())
+                encrypt(ask_key(), infile, outfile)
         elif len(sys.argv) == 3:
             print("Missing output file")
         else:
             print("Missing file to encrypt")
             exit(1)
-    elif sys.argv[1] == "--decrypt" or sys.argv[1] == "-d":
+    elif feature == "decrypt":
         if len(sys.argv) >= 3:
             if "--key-from-stdin" in sys.argv:
-                decrypt(stdin_key())
+                decrypt(stdin_key(), infile)
             else:
-                decrypt(ask_key())
+                decrypt(ask_key(), infile)
         else:
             print("Missing file to decrypt")
             exit(1)
@@ -121,6 +137,8 @@ if len(sys.argv) != 1:
     else:
         print("vault requires an argument!")
         print("Try 'vault -h for more information.")
+        exit(1)
 else:
     print("vault requires an argument!")
     print("Try 'vault -h for more information.")
+    exit(1)
