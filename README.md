@@ -1,7 +1,7 @@
 # IFT383-extra-credit
 ### Usage  
-`vault {--encypt | -e} INFILE OUTFILE`  
-`vault {--decrypt | -d} INFILE`
+`vault [--key-from-stdin] {--encypt | -e} INFILE OUTFILE`  
+`vault [--key-from-stdin] {--decrypt | -d} INFILE`
   
 ### Overview
   This is a Python script for encrypting and decrypting ascii text using a simple cipher. There are three main parts to the script- requesting the user to input a key, encrypting, and decrypting text.  

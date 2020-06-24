@@ -18,9 +18,26 @@ def ask_key():
     return(cipher)
 
 
+# Function for reading key from stdin
+def stdin_key():
+    key = ""
+    for i in str(sys.stdin.read()):
+        key += i  # Concatenate each item from stdin
+    key = key.rstrip()  # Remove the newline that comes from using echo
+    seed = ""
+
+    for i in key:  # Iterate over each character and convert to ascii decimal value
+        seed += str(ord(i))  # Concatenate up each ascii value into a single string
+    print("Using key", seed, "\n")
+    random.seed(a=seed)  # Use the concatenated string as a seed for random
+    cipher = random.randint(1, 255)  # Create a random integer 1-255
+
+    return(cipher)
+
+
 # Function for encrypting data
-def encrypt():
-    cipher = ask_key()  # Run function to get user input for key
+def encrypt(key):
+    cipher = int(key)  # Run function to get user input for key
     my_file = open(sys.argv[2], "r")  # Open up the file with a secret message
 
     my_data = ""
@@ -53,8 +70,8 @@ def encrypt():
 
 
 # Function for decrypting data
-def decrypt():
-    cipher = int(ask_key())
+def decrypt(key):
+    cipher = int(key)
     my_data = ""
     n = 0
     decode_step_1 = 0
@@ -80,21 +97,27 @@ def decrypt():
 # Check for user input and run appropriate function
 if len(sys.argv) != 1:
     if sys.argv[1] == "--encrypt" or sys.argv[1] == "-e":
-        if len(sys.argv) == 4:
-            encrypt()
+        if len(sys.argv) >= 4:
+            if "--key-from-stdin" in sys.argv:
+                encrypt(stdin_key())
+            else:
+                encrypt(ask_key())
         elif len(sys.argv) == 3:
             print("Missing output file")
         else:
             print("Missing file to encrypt")
             exit(1)
     elif sys.argv[1] == "--decrypt" or sys.argv[1] == "-d":
-        if len(sys.argv) == 3:
-            decrypt()
+        if len(sys.argv) >= 3:
+            if "--key-from-stdin" in sys.argv:
+                decrypt(stdin_key())
+            else:
+                decrypt(ask_key())
         else:
             print("Missing file to decrypt")
             exit(1)
     elif ((sys.argv[1] == "-h") or (sys.argv[1] == "--help")):
-        print("Usage: vault {--encypt | -e} INFILE OUTFILE\n       vault {--decrypt | -d} INFILE")
+        print("Usage: vault [--key-from-stdin] {--encypt | -e} INFILE OUTFILE\n       vault [--key-from-stdin] {--decrypt | -d} INFILE")
     else:
         print("vault requires an argument!")
         print("Try 'vault -h for more information.")
