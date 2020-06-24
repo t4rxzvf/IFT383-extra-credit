@@ -1,6 +1,6 @@
 # IFT383-extra-credit
-### Usage 
-`vault {--encypt | -e} INFILE OUTFILE`
+### Usage  
+`vault {--encypt | -e} INFILE OUTFILE`  
 `vault {--decrypt | -d} INFILE`
   
 ### Overview
